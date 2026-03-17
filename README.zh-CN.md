@@ -34,25 +34,6 @@
 
 这个 skill 的目标就是把真实代码、文档、mock 数据和 git 历史，恢复成可维护的 OpenSpec 产物。
 
-## 搜索关键词
-
-为了让 GitHub 搜索更容易命中，这个仓库会刻意包含下面这些中英文关键词：
-
-- OpenSpec reverse engineering
-- reverse engineer OpenSpec from existing code
-- repair missing OpenSpec after direct code push
-- OpenSpec remediation
-- legacy code to OpenSpec
-- code to OpenSpec
-- code-to-spec
-- OpenSpec archive skill
-- 从现有代码反推 OpenSpec
-- OpenSpec 代码逆向
-- 旧代码补 OpenSpec
-- 修复缺失的 OpenSpec
-- 未走 OpenSpec 的代码提交流程补救
-- 按文件夹逆向 OpenSpec
-
 ## 核心能力
 
 - 从现有实现反推 change 边界，而不是把所有旧代码硬塞进一个归档
@@ -117,22 +98,6 @@ npx openskills read openspec-retro-archive
 - 按功能逆向
 - 按文件夹逆向
 - 按配置继承输出语言与限制参数
-
-## GitHub 搜索优化建议
-
-我把适合填写到 GitHub 仓库设置里的信息整理到了 [github-metadata.md](./docs/github-metadata.md)，包括：
-
-- 推荐仓库描述
-- 推荐 Topics
-- 推荐关键词
-- 可选仓库命名建议
-
-GitHub 搜索最常依赖这些位置：
-
-- 仓库名
-- 仓库描述
-- README 内容
-- Topics
 
 ## 上传 GitHub
 

@@ -32,26 +32,6 @@ It can work from:
 
 Before generating output, it can also read OpenSpec configuration such as `openspec/config.yaml` and `.openspec.yaml` to align language, terminology, formatting, and project-specific constraints.
 
-## Search Keywords
-
-This repository intentionally includes the phrases below so GitHub search can match it for both English and Chinese queries:
-
-- OpenSpec reverse engineering
-- reverse engineer OpenSpec from existing code
-- repair missing OpenSpec after direct code push
-- OpenSpec remediation
-- legacy code to OpenSpec
-- code to OpenSpec
-- code-to-spec
-- reverse spec generation
-- OpenSpec archive skill
-- 从现有代码反推 OpenSpec
-- OpenSpec 代码逆向
-- 旧代码补 OpenSpec
-- 修复缺失的 OpenSpec
-- 未走 OpenSpec 的代码提交流程补救
-- 按文件夹逆向 OpenSpec
-
 ## Core Capabilities
 
 - infer change boundaries from existing implementation instead of stuffing all old code into one archive
@@ -116,22 +96,6 @@ Evaluation prompts live in [evals.json](./evals/evals.json). They now cover:
 - feature-scoped reverse engineering
 - folder-scoped reverse engineering
 - config-aware language and constraint handling
-
-## GitHub SEO Recommendations
-
-See [github-metadata.md](./docs/github-metadata.md) for:
-
-- recommended repository description
-- recommended GitHub topics
-- recommended keyword phrases
-- repository naming suggestions
-
-These fields matter because GitHub search relies heavily on:
-
-- repository name
-- repository description
-- README content
-- topics
 
 ## Publishing to GitHub
 
