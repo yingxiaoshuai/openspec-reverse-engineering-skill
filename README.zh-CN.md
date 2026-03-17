@@ -112,4 +112,4 @@ git push -u origin main
 
 ## License
 
-当前仓库还没有附带许可证。如果你准备公开发布，建议补一个合适的 `LICENSE` 文件。
+本仓库采用 Apache License 2.0，详见 `LICENSE` 文件。

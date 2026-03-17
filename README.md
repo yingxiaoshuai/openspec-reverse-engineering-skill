@@ -110,4 +110,4 @@ git push -u origin main
 
 ## License
 
-No license is included yet. If you want to publish the repository publicly, add a `LICENSE` file that matches how you want others to use the project.
+This repository is licensed under the Apache License 2.0. See `LICENSE`.
