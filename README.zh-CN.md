@@ -1,0 +1,150 @@
+# openspec-retro-archive
+
+[English](./README.md) | 简体中文
+
+这是一个用于把“现有代码 / 旧代码 / 已上线功能”反向沉淀成 OpenSpec 的 skill，同时也支持修复“团队成员没有走 OpenSpec 流程就直接提交代码”的情况。
+
+它主要覆盖两类场景：
+
+1. **逆向归档**
+   - 把历史模块或已上线功能整理成 archived OpenSpec change
+2. **修复补档**
+   - 团队有人没按 OpenSpec 提交流程走，代码已经提交或合并，需要补齐和修复 OpenSpec
+
+并且它支持明确指向范围：
+
+- 某个功能
+- 某个 capability
+- 某个文件夹
+- 某几个文件
+- 某段 git 历史
+
+也就是说，你可以让它只处理 `src/features/knowledge-base`，而不是默认扫整个仓库。
+
+在生成结果之前，它还可以先读取 `openspec/config.yaml` 或 `.openspec.yaml`，继承仓库里定义的输出语言、schema、术语和限制参数。
+
+## 这个项目解决什么问题
+
+很多团队会出现这几种情况：
+
+- 先写代码，后补规范
+- 功能已经上线，但从来没写过 OpenSpec
+- 团队成员直接提交代码，没有创建 OpenSpec change
+- 代码已经改了，但 spec 没同步
+
+这个 skill 的目标就是把真实代码、文档、mock 数据和 git 历史，恢复成可维护的 OpenSpec 产物。
+
+## 搜索关键词
+
+为了让 GitHub 搜索更容易命中，这个仓库会刻意包含下面这些中英文关键词：
+
+- OpenSpec reverse engineering
+- reverse engineer OpenSpec from existing code
+- repair missing OpenSpec after direct code push
+- OpenSpec remediation
+- legacy code to OpenSpec
+- code to OpenSpec
+- code-to-spec
+- OpenSpec archive skill
+- 从现有代码反推 OpenSpec
+- OpenSpec 代码逆向
+- 旧代码补 OpenSpec
+- 修复缺失的 OpenSpec
+- 未走 OpenSpec 的代码提交流程补救
+- 按文件夹逆向 OpenSpec
+
+## 核心能力
+
+- 从现有实现反推 change 边界，而不是把所有旧代码硬塞进一个归档
+- 基于代码证据、文档证据和 git 历史生成 OpenSpec 归档包
+- 修复团队成员绕过 OpenSpec 直接提交代码后的缺失文档
+- 读取 `openspec/config.yaml` / `.openspec.yaml`，遵循仓库配置中的语言、术语、schema 和限制参数
+- 支持按功能、按文件夹、按文件集合定点逆向
+- 区分“直接证据”“合理推断”“待确认空白”
+- 在历史补档时默认把已实现任务写成完成，在修复模式下允许保留待补 OpenSpec 项
+
+## 项目结构
+
+```text
+openspec-retro-archive/
+├─ SKILL.md
+├─ README.md
+├─ README.zh-CN.md
+├─ .gitignore
+├─ .gitattributes
+├─ evals/
+│  └─ evals.json
+├─ examples/
+│  ├─ prompts.en.md
+│  ├─ prompts.zh-CN.md
+│  └─ prompts.md
+└─ docs/
+   └─ github-metadata.md
+```
+
+## 本地安装
+
+如果你想本地直接试用，可以把这个项目放到支持 skills 的目录下，例如：
+
+```powershell
+Copy-Item -Recurse .\openspec-retro-archive $HOME\.claude\skills\openspec-retro-archive
+```
+
+然后读取：
+
+```powershell
+npx openskills read openspec-retro-archive
+```
+
+## 示例提示词
+
+- 英文示例: [prompts.en.md](./examples/prompts.en.md)
+- 中文示例: [prompts.zh-CN.md](./examples/prompts.zh-CN.md)
+
+常见请求方式：
+
+- “请把 `src/features/analytics-dashboard` 的现有实现反推成一个 archived OpenSpec change。”
+- “有人直接改了 `src/features/incident-center/components`，但没走 OpenSpec。请帮我生成一个 repair change，把缺失的 OpenSpec 补回来。”
+- “只针对 `src/features/knowledge-base` 和相关 API 做逆向，不要扫描整个仓库。”
+- “请先读取 `openspec/config.yaml`，按里面的语言和限制参数输出，再修复 `src/features/incident-center` 缺失的 OpenSpec。”
+
+## 评估
+
+测试 prompts 位于 [evals.json](./evals/evals.json)，现在已经覆盖：
+
+- 逆向归档
+- 漏流程提交后的修复补档
+- 按功能逆向
+- 按文件夹逆向
+- 按配置继承输出语言与限制参数
+
+## GitHub 搜索优化建议
+
+我把适合填写到 GitHub 仓库设置里的信息整理到了 [github-metadata.md](./docs/github-metadata.md)，包括：
+
+- 推荐仓库描述
+- 推荐 Topics
+- 推荐关键词
+- 可选仓库命名建议
+
+GitHub 搜索最常依赖这些位置：
+
+- 仓库名
+- 仓库描述
+- README 内容
+- Topics
+
+## 上传 GitHub
+
+示例命令：
+
+```powershell
+git add .
+git commit -m "feat: add OpenSpec retro archive and repair skill"
+git remote add origin <your-github-repo-url>
+git push -u origin main
+```
+
+## License
+
+当前仓库还没有附带许可证。如果你准备公开发布，建议补一个合适的 `LICENSE` 文件。

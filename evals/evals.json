@@ -1,0 +1,80 @@
+{
+  "skill_name": "openspec-retro-archive",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请根据这个仓库里已经存在的 `src/features/analytics-dashboard`、相关 `src/components`、`src/api` 和 `openspec/specs/analytics-dashboard/spec.md`，把分析看板功能之前已经完成的一轮实现整理成一个 archived OpenSpec change。需要你自己判断 change 名、归档日期、proposal、design、tasks 和 delta spec，并说明哪些结论来自代码直接证据，哪些是推断。",
+      "expected_output": "生成一个贴合仓库风格的 archived change，包含 proposal/design/tasks/specs，并且 summary 中单列 evidence、assumptions、gaps。",
+      "files": [
+        "src/features/analytics-dashboard",
+        "src/components",
+        "src/api",
+        "openspec/specs/analytics-dashboard/spec.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "智能事件分析这一块已经上线，但之前没有完整写 OpenSpec。请结合 `src/features/incident-analysis`、`src/features/incident-center`、相关 store/api/mock，以及 git 历史，把它们拆成合理的 archived changes。不要把 UI 改版和能力新增混成一个 change；每个 tasks.md 都默认写成已完成。",
+      "expected_output": "先判断拆分粒度，再为每个 change 生成 archived 目录与 artifacts；delta specs 体现 capability 增量，不是整份主 spec 复制。",
+      "files": [
+        "src/features/incident-analysis",
+        "src/features/incident-center",
+        "src/stores",
+        "src/api",
+        "mock"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我有一块历史模块 `asset-lifecycle`，功能都写完了，但 OpenSpec 只有零散 spec。请从代码、文档和 archive 案例里反推 proposal/design/tasks/spec，把它归档到 `openspec/changes/archive/`，并在需要时补齐 `openspec/specs/asset-lifecycle/spec.md` 的 Purpose，不要编造代码里没有的能力。",
+      "expected_output": "产出完整的 retro archive 结果，优先复用仓库现有写法，且不会凭空添加需求或未来计划。",
+      "files": [
+        "src/features/asset-lifecycle",
+        "docs",
+        "openspec/changes/archive",
+        "openspec/specs/asset-lifecycle/spec.md"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "团队里有人直接提交了 `src/features/incident-center/components` 和 `src/api/incident-center.ts`，但没有创建任何 OpenSpec change。请只针对这些目录和文件做修复补档，生成一个 repair change，补 proposal/design/tasks/delta spec，并指出哪些主 spec 条目已经和代码漂移。",
+      "expected_output": "识别这是 repair 模式而不是历史 archive；输出围绕指定路径的 repair change，并清楚区分已实现项与仍需补做的 OpenSpec 修复项。",
+      "files": [
+        "src/features/incident-center/components",
+        "src/api/incident-center.ts",
+        "openspec/specs/incident-center/spec.md"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "不要扫描整个仓库。只使用 `src/features/knowledge-base` 和相关 API 文件，反推这一块现有功能对应的 OpenSpec。范围外的页面不要并进来；如果发现 spec 缺失，请按 folder-scoped 的方式生成结果。",
+      "expected_output": "明确尊重 folder scope，只围绕指定目录生成 OpenSpec 结果，并在总结里说明最终纳入范围与排除范围。",
+      "files": [
+        "src/features/knowledge-base",
+        "src/api",
+        "openspec/specs/knowledge-base/spec.md"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "请先读取 `openspec/config.yaml`。如果配置要求所有产出都使用简体中文，并且要求沿用仓库里的项目术语与摘要风格，就按这个配置执行。然后只针对 `src/features/incident-center` 和 `openspec/specs/incident-center/spec.md` 做一次 repair 模式补档，补 proposal/design/tasks/delta spec，并在总结里说明哪些输出约束来自配置。",
+      "expected_output": "先识别并应用配置中的语言和风格约束，再输出中文的 repair change 结果；summary 中单列 config used 或 config-derived constraints，不把配置要求遗漏掉。",
+      "files": [
+        "openspec/config.yaml",
+        "src/features/incident-center",
+        "openspec/specs/incident-center/spec.md"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "请先读取 `openspec/config.yaml` 的 `context`。如果里面规定了目录边界、限制参数、不要修改某些 Package、以及发现冲突时要把未确认项留在 Open Questions 里，就遵循这些限制。然后只逆向 `src/features/analytics-dashboard` 和相关 API，把它整理成一个 archived change，并明确指出哪些用户要求与配置有冲突、哪些限制是你继承自配置的。",
+      "expected_output": "输出一个受配置约束的 retro archive 结果：严格尊重目标范围和限制项，不扩扫无关模块，不编造未确认需求，并在总结里显式说明配置来源与冲突处理。",
+      "files": [
+        "openspec/config.yaml",
+        "src/features/analytics-dashboard",
+        "src/api",
+        "openspec/specs/analytics-dashboard/spec.md"
+      ]
+    }
+  ]
+}
