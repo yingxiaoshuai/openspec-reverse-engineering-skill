@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "请根据这个仓库里已经存在的 `src/features/analytics-dashboard`、相关 `src/components`、`src/api` 和 `openspec/specs/analytics-dashboard/spec.md`，把分析看板功能之前已经完成的一轮实现整理成一个 archived OpenSpec change。需要你自己判断 change 名、归档日期、proposal、design、tasks 和 delta spec，并说明哪些结论来自代码直接证据，哪些是推断。",
-      "expected_output": "生成一个贴合仓库风格的 archived change，包含 proposal/design/tasks/specs，并且 summary 中单列 evidence、assumptions、gaps。",
+      "prompt": "Please reverse engineer the existing `src/features/analytics-dashboard`, related `src/components`, related `src/api`, and `openspec/specs/analytics-dashboard/spec.md` into an archived OpenSpec change. Infer a suitable change name and archive date, generate proposal, design, tasks, and delta spec, and clearly separate direct code evidence from reasonable inference.",
+      "expected_output": "Produces an archived OpenSpec change that matches repo conventions, includes proposal/design/tasks/specs, and explicitly calls out evidence, assumptions, and remaining gaps.",
       "files": [
         "src/features/analytics-dashboard",
         "src/components",
@@ -14,8 +14,8 @@
     },
     {
       "id": 2,
-      "prompt": "智能事件分析这一块已经上线，但之前没有完整写 OpenSpec。请结合 `src/features/incident-analysis`、`src/features/incident-center`、相关 store/api/mock，以及 git 历史，把它们拆成合理的 archived changes。不要把 UI 改版和能力新增混成一个 change；每个 tasks.md 都默认写成已完成。",
-      "expected_output": "先判断拆分粒度，再为每个 change 生成 archived 目录与 artifacts；delta specs 体现 capability 增量，不是整份主 spec 复制。",
+      "prompt": "This incident-analysis area is already shipped, but OpenSpec was never properly written. Please inspect `src/features/incident-analysis`, `src/features/incident-center`, the related stores, APIs, mocks, and git history, then split the result into sensible archived OpenSpec changes. Do not mix UI refresh work and net-new capabilities into one change, and default historical tasks to completed.",
+      "expected_output": "First decides a reasonable archival split, then generates archived artifacts per change with delta specs that describe capability increments instead of copying whole main specs.",
       "files": [
         "src/features/incident-analysis",
         "src/features/incident-center",
@@ -26,8 +26,8 @@
     },
     {
       "id": 3,
-      "prompt": "我有一块历史模块 `asset-lifecycle`，功能都写完了，但 OpenSpec 只有零散 spec。请从代码、文档和 archive 案例里反推 proposal/design/tasks/spec，把它归档到 `openspec/changes/archive/`，并在需要时补齐 `openspec/specs/asset-lifecycle/spec.md` 的 Purpose，不要编造代码里没有的能力。",
-      "expected_output": "产出完整的 retro archive 结果，优先复用仓库现有写法，且不会凭空添加需求或未来计划。",
+      "prompt": "I have a historical `asset-lifecycle` module where the feature is fully implemented but OpenSpec only has scattered specs. Please reverse engineer proposal, design, tasks, and spec from the code, docs, and archived examples; archive the result under `openspec/changes/archive/`; and fill in the purpose of `openspec/specs/asset-lifecycle/spec.md` when the evidence is strong. Do not invent capabilities that are not present in the code.",
+      "expected_output": "Produces a complete retro-archive result that reuses repository writing patterns and does not fabricate requirements or future plans.",
       "files": [
         "src/features/asset-lifecycle",
         "docs",
@@ -37,8 +37,8 @@
     },
     {
       "id": 4,
-      "prompt": "团队里有人直接提交了 `src/features/incident-center/components` 和 `src/api/incident-center.ts`，但没有创建任何 OpenSpec change。请只针对这些目录和文件做修复补档，生成一个 repair change，补 proposal/design/tasks/delta spec，并指出哪些主 spec 条目已经和代码漂移。",
-      "expected_output": "识别这是 repair 模式而不是历史 archive；输出围绕指定路径的 repair change，并清楚区分已实现项与仍需补做的 OpenSpec 修复项。",
+      "prompt": "A teammate directly changed `src/features/incident-center/components` and `src/api/incident-center.ts` without creating any OpenSpec change. Please only inspect those paths, create a repair change, add proposal/design/tasks/delta spec, and point out which spec requirements now drift from the implementation.",
+      "expected_output": "Recognizes repair mode rather than historical archive mode, keeps the result scoped to the specified files, and clearly separates already-implemented work from remaining OpenSpec follow-up.",
       "files": [
         "src/features/incident-center/components",
         "src/api/incident-center.ts",
@@ -47,8 +47,8 @@
     },
     {
       "id": 5,
-      "prompt": "不要扫描整个仓库。只使用 `src/features/knowledge-base` 和相关 API 文件，反推这一块现有功能对应的 OpenSpec。范围外的页面不要并进来；如果发现 spec 缺失，请按 folder-scoped 的方式生成结果。",
-      "expected_output": "明确尊重 folder scope，只围绕指定目录生成 OpenSpec 结果，并在总结里说明最终纳入范围与排除范围。",
+      "prompt": "Do not scan the whole repository. Only use `src/features/knowledge-base` and its related API files to reverse engineer the OpenSpec for that feature. Keep out-of-scope pages excluded, and if the main spec is missing or stale, handle it with a folder-scoped result.",
+      "expected_output": "Respects the folder scope, generates OpenSpec only for the requested area, and states both included and excluded scope in the summary.",
       "files": [
         "src/features/knowledge-base",
         "src/api",
@@ -57,8 +57,8 @@
     },
     {
       "id": 6,
-      "prompt": "请先读取 `openspec/config.yaml`。如果配置要求所有产出都使用简体中文，并且要求沿用仓库里的项目术语与摘要风格，就按这个配置执行。然后只针对 `src/features/incident-center` 和 `openspec/specs/incident-center/spec.md` 做一次 repair 模式补档，补 proposal/design/tasks/delta spec，并在总结里说明哪些输出约束来自配置。",
-      "expected_output": "先识别并应用配置中的语言和风格约束，再输出中文的 repair change 结果；summary 中单列 config used 或 config-derived constraints，不把配置要求遗漏掉。",
+      "prompt": "Read `openspec/config.yaml` first. If config requires Simplified Chinese output and repository terminology, follow it. Then only inspect `src/features/incident-center` and `openspec/specs/incident-center/spec.md` to run a repair-mode OpenSpec backfill with proposal, design, tasks, and delta spec, and explain which output constraints came from config.",
+      "expected_output": "Applies config-derived language and style constraints before writing the repair change, and explicitly lists config usage in the summary.",
       "files": [
         "openspec/config.yaml",
         "src/features/incident-center",
@@ -67,13 +67,52 @@
     },
     {
       "id": 7,
-      "prompt": "请先读取 `openspec/config.yaml` 的 `context`。如果里面规定了目录边界、限制参数、不要修改某些 Package、以及发现冲突时要把未确认项留在 Open Questions 里，就遵循这些限制。然后只逆向 `src/features/analytics-dashboard` 和相关 API，把它整理成一个 archived change，并明确指出哪些用户要求与配置有冲突、哪些限制是你继承自配置的。",
-      "expected_output": "输出一个受配置约束的 retro archive 结果：严格尊重目标范围和限制项，不扩扫无关模块，不编造未确认需求，并在总结里显式说明配置来源与冲突处理。",
+      "prompt": "Read the `context` section in `openspec/config.yaml` first. If it defines scope boundaries, limit parameters, packages that should not be modified, or says unresolved conflicts must stay in Open Questions, inherit those rules. Then reverse engineer only `src/features/analytics-dashboard` and its related APIs into an archived change, and explicitly note which user requests conflict with config.",
+      "expected_output": "Produces a config-constrained retro-archive result that stays inside the requested scope, avoids unrelated modules, and explicitly reports config-derived constraints and mismatches.",
       "files": [
         "openspec/config.yaml",
         "src/features/analytics-dashboard",
         "src/api",
         "openspec/specs/analytics-dashboard/spec.md"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "OpenSpec 好久没更新了。请根据当前 `src/layout`、`src/components/layout` 和 `openspec/specs/layout/spec.md` 的真实实现，把 `layout` capability 同步到最新状态；如果发现之前有人绕过 OpenSpec 提交，顺手补齐需要的 repair artifacts，但不要把这件事当成普通文档润色。",
+      "expected_output": "识别这是一个 code-backed 的 capability spec 同步请求，而不是普通文档更新；先判断 drift 和缺失工件，再在限定 scope 内更新 `layout` 对应的 OpenSpec，并在总结里说明 evidence、assumptions 和是否需要 repair change。",
+      "files": [
+        "src/layout",
+        "src/components/layout",
+        "openspec/specs/layout/spec.md"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "帮我更新一下 `@layout`。OpenSpec 这块落后代码挺久了，只看 layout 相关目录和现有 spec，判断应该走 repair backfill 还是稳定 spec sync，并把不在范围内的页面排除掉。",
+      "expected_output": "能够把 `@layout` 这类间接说法识别成 scoped OpenSpec 同步任务，先做范围判定，再基于实现证据处理 drift 或 backfill，而不是直接把请求降级成普通文档修改。",
+      "files": [
+        "src/layout",
+        "openspec/specs/layout/spec.md"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "这个仓库特别大，OpenSpec 也落后了。请帮我把 `layout-shell` 这块从代码逆向回 OpenSpec，但不要直接扫全仓。先建立候选路径清单，只挑最有代表性的页面入口、共享布局组件、相关 API 和现有 spec 来判断范围；如果还有很多不确定路径，就把它们列成 deferred scope，而不是继续把上下文吃满。",
+      "expected_output": "在大仓场景下先走 candidate map 和 staged discovery，而不是全仓深读；输出应明确写出已检查范围、延后范围、为什么这些代表性文件足以支持当前 OpenSpec 修复或补档。",
+      "files": [
+        "src",
+        "openspec/specs",
+        "openspec/changes",
+        "openspec/changes/archive"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "请把这个仓库里所有缺失的 OpenSpec 都补齐，也把所有落后代码的 spec 一并同步。仓库比较大，但你先自己看着处理。这个请求如果过宽，请不要直接扫全仓，而是根据候选路径和命中结果先停下来，给我一个分阶段的 scope plan 和推荐先做的 capability。",
+      "expected_output": "识别这是一个超过阈值的 repo-wide 请求，不应直接进入大规模读文件；应先输出 scope plan、拆分建议、推荐优先切片，并说明为什么现在不适合一次性处理全仓。",
+      "files": [
+        "src",
+        "openspec"
       ]
     }
   ]

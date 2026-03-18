@@ -23,3 +23,19 @@ The code behavior changed, but I am not sure whether the code is correct or the 
 ## Example 6: Config-Aware Repair
 
 Read `openspec/config.yaml` first and follow its language, terminology, and constraint settings while generating the result. Then inspect only `src/features/incident-center` and create a repair change for the missing OpenSpec without scanning the rest of the repository.
+
+## Example 7: Stale Capability Spec Sync
+
+OpenSpec has not been updated in a while. Please use the current layout-related code plus `openspec/specs/layout/spec.md` to sync the `layout` capability, explain what drifted, and create any missing repair artifacts instead of treating this as a copy edit.
+
+## Example 8: Indirect Scoped Request
+
+Help me update `@layout`. Only inspect the layout implementation and its existing OpenSpec files, decide whether this is a repair backfill or a stable spec sync, and keep unrelated modules out of scope.
+
+## Example 9: Large Repository Safety
+
+This repository is huge and OpenSpec is behind. Do not scan the whole project. Build a candidate map first, narrow to the most likely folders for the `layout-shell` capability, inspect only representative implementation files plus the matching spec files, and tell me what you intentionally left out because of scope or context budget.
+
+## Example 10: Threshold Trigger
+
+Please repair all missing OpenSpec across this repo. Before reading lots of files, detect that this is too broad, stop at a scope plan, and split the work into smaller capability slices instead of trying to process the whole repository in one pass.

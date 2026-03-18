@@ -1,18 +1,19 @@
 ---
 name: openspec-retro-archive
-description: Reverse engineer shipped, legacy, or already-written code into OpenSpec archive changes and capability specs, and repair or backfill missing OpenSpec after teammates bypass the OpenSpec workflow and push code directly. Always read repo OpenSpec config such as `openspec/config.yaml` or `.openspec.yaml` and follow its output language, project context, and constraint parameters. Use this skill when users ask to reconstruct proposal/design/tasks/spec artifacts from existing implementations, archive historical features into OpenSpec, repair missing OpenSpec, backfill skipped OpenSpec changes, target a specific feature/folder/file/commit, or mention retro spec, legacy code to OpenSpec, reverse engineer OpenSpec from existing code, code-to-spec, “把旧代码补成 OpenSpec”, “修复缺失的 OpenSpec”, or “按某个功能/文件夹/文件逆向”.
+description: Reverse engineer shipped, legacy, or already-written code into OpenSpec archive changes and capability specs, and repair or backfill missing or stale OpenSpec when code moved ahead of docs. Always read repo OpenSpec config such as `openspec/config.yaml` or `.openspec.yaml` and follow its output language, project context, and constraint parameters. Use this skill when users ask to reconstruct proposal/design/tasks/spec artifacts from existing implementations, archive historical features into OpenSpec, repair skipped OpenSpec changes, sync an outdated OpenSpec capability or main spec with current code, investigate spec drift, or update a specific feature/folder/file/capability such as `layout` from real implementation. Trigger even for indirect phrasing like "OpenSpec hasn't been updated in a while", "help me update @layout", "sync the spec with code", "根据代码更新 OpenSpec", "补 layout 的 OpenSpec", "同步 capability spec", or "spec 和代码对不上".
 category: OpenSpec
-tags: [openspec, archive, reverse-engineering, legacy, documentation, code-to-spec, remediation, repair]
+tags: [openspec, archive, reverse-engineering, legacy, documentation, code-to-spec, remediation, repair, sync, drift, capability-spec]
 ---
 
 # OpenSpec Retro Archive and Repair
 
-This skill handles two common problems:
+This skill handles three common problems:
 
 1. The code is already written or shipped, but the repository never received complete OpenSpec artifacts.
 2. A teammate bypassed OpenSpec and pushed code directly, so the missing OpenSpec change needs to be repaired and backfilled.
+3. OpenSpec already exists, but a main spec or capability spec is stale, partial, or obviously behind the current implementation.
 
-The goal is not to redesign the feature. The goal is to reconstruct maintainable OpenSpec artifacts from real evidence in the repository.
+The goal is not to redesign the feature. The goal is to reconstruct maintainable OpenSpec artifacts from real evidence in the repository, and to sync existing specs back to reality when they drift.
 
 ## Supported Modes
 
@@ -41,6 +42,7 @@ Use this mode for:
 - merged code that is missing change / delta spec / proposal / tasks artifacts
 - drift between the main spec and the real implementation
 - repair work for code that was submitted outside the intended OpenSpec workflow
+- stale capability or main specs that need to be synced from current code evidence
 
 Default outputs:
 
@@ -49,7 +51,7 @@ Default outputs:
 - if the work is already stable or clearly historical, use an archived change:
   - `openspec/changes/archive/YYYY-MM-DD-<change-name>/...`
 
-Do not assume every repair should go straight to archive. For "just merged but skipped OpenSpec" situations, default to a live repair change.
+Do not assume every repair should go straight to archive. For "just merged but skipped OpenSpec" situations, default to a live repair change. If the user only asked to sync a stale main spec or capability spec, still decide whether missing repair artifacts need to be created alongside the spec update.
 
 ## Scoped Reverse Engineering
 
@@ -70,6 +72,81 @@ When the user gives an explicit scope:
 - do not merge unrelated modules into the same change
 - state both the included scope and the excluded scope in the summary
 
+## Large Repository Safety Mode
+
+Large repositories create a context risk if you read too many files too early. Default to a staged discovery workflow instead of full-repo inspection.
+
+Use safety mode whenever any of the following is true:
+
+- the user gives no explicit folder or file scope
+- the target area appears to span many top-level directories
+- the repository contains many feature folders or packages
+- search results for the feature name return many unrelated hits
+- the request sounds broad, such as "update all missing OpenSpec" or "reverse engineer the whole project"
+
+Safety mode rules:
+
+- never open whole directories file-by-file just because they exist
+- build a candidate map first using filenames, directory names, routes, APIs, stores, and existing OpenSpec references
+- inspect only the most relevant candidate paths first
+- prefer the smallest scope that can satisfy the request
+- if the repository is clearly too large for one clean pass, split the work into multiple proposed changes instead of forcing one giant archive
+- summarize findings between passes instead of carrying raw file contents forward
+
+If the user asks for a very broad area and several unrelated candidate scopes remain after the first pass, pause and ask for narrowing only then. Before asking, do the cheap discovery work yourself.
+
+## Hard Stop Thresholds
+
+These are protection rules, not soft suggestions.
+
+If any of the following happens during discovery, stop deep reading and switch to a scope-plan response first:
+
+- the candidate map contains more than 12 plausible paths
+- the candidate map spans more than 3 top-level feature areas or packages
+- keyword search for the target capability returns more than 20 meaningful hits
+- satisfying the request would require reading more than 12 implementation files before the capability boundary is clear
+- the user asks for repo-wide reverse engineering, repo-wide sync, or "fix all missing OpenSpec"
+
+When a threshold is exceeded:
+
+- do not keep opening more files in the same pass
+- produce a short scope plan with proposed slices, likely capabilities, and recommended next target
+- ask the user to choose one slice only if the slices are still materially different after cheap discovery
+- if one slice is clearly the best match, proceed with only that slice and list the others as deferred scope
+
+## Evidence Budget and Read Limits
+
+Treat context like a budget.
+
+Default first-pass budget:
+
+- 1-2 OpenSpec config files
+- 1-3 existing OpenSpec specs or archived examples
+- 5-8 implementation files across UI, API, store, router, or types
+- 3-5 git history lookups or diffs
+- 1-2 docs or README files
+
+If that first pass is insufficient:
+
+- do a second pass only on unresolved paths
+- carry forward summarized evidence, not copied file contents
+- keep the second pass focused on missing behaviors, conflicts, or naming decisions
+
+Absolute ceilings per pass:
+
+- no more than 12 implementation files
+- no more than 4 spec or archived-example files
+- no more than 6 git-history reads
+
+If you hit a ceiling, summarize what is known, mark what remains uncertain, and either split the work or ask for narrowing.
+
+Do not:
+
+- read every file in a feature directory by default
+- dump large file contents into the conversation when a summary is enough
+- read multiple parallel modules in full before deciding whether they belong to the same capability
+- scan the entire repository just because the user used a broad noun like "layout", "dashboard", or "OpenSpec"
+
 ## When to Use This Skill
 
 Prefer this skill when the user says things like:
@@ -81,10 +158,34 @@ Prefer this skill when the user says things like:
 - "Someone pushed code without using OpenSpec, please repair it"
 - "Backfill the missing OpenSpec"
 - "Fix the mismatch between spec and code"
+- "OpenSpec hasn't been updated in a while, please sync it with the current code"
+- "Help me update `layout` / `@layout`"
+- "Sync this capability spec from current implementation"
+- "Bring the spec back in line with code"
+- "Use current code to refresh the outdated OpenSpec docs"
 - "Only reverse engineer this folder or these files"
 - "Turn this feature into a standalone archived change"
 
 If the user wants to create a brand-new OpenSpec change for a not-yet-built feature, use the normal proposal / apply / archive workflow instead.
+
+Do not treat requests like "update OpenSpec", "update `layout`", or "sync the spec" as ordinary document refresh by default when the surrounding context implies code-backed drift repair or capability recovery.
+
+## Interpreting Ambiguous OpenSpec Update Requests
+
+These requests often under-trigger because they sound like simple documentation edits:
+
+- "OpenSpec is old"
+- "OpenSpec hasn't been updated in a while"
+- "Help me update `layout`"
+- "Sync the capability spec"
+- "Bring `openspec/specs/layout/spec.md` up to date"
+
+Default interpretation rules:
+
+- if the user mentions current code, implementation, drift, mismatch, stale docs, or a capability name such as `layout`, assume they want code-backed OpenSpec synchronization
+- if the user gives a capability token such as `layout` or `@layout`, treat it as a scoped OpenSpec target and inspect the matching spec plus related implementation before editing
+- if the request implies the spec should match reality, start with repair analysis instead of generic copy editing
+- only treat it as ordinary doc editing when the user explicitly asks for wording, formatting, translation, or tone changes without implementation sync
 
 ## Working Boundaries
 
@@ -134,12 +235,13 @@ Config rules:
 Collect context in this order:
 
 1. user-provided scope, files, folders, dates, module names, page names, or release context
-2. OpenSpec config files plus their `context`, language settings, limit parameters, and project constraints
-3. `git diff`, `git log -- <path>`, `git blame`, related commits, and branch names
-4. `src/`, `app/`, `modules/`, `components/`, `router/`
-5. `api/`, `stores/`, `types/`, `mock/`
-6. `docs/`, README files, API docs, design notes
-7. similar examples in `openspec/changes/`, `openspec/changes/archive/`, and `openspec/specs/`
+2. a lightweight candidate map from filenames, routes, API names, store names, and existing OpenSpec references
+3. OpenSpec config files plus their `context`, language settings, limit parameters, and project constraints
+4. `git diff`, `git log -- <path>`, `git blame`, related commits, and branch names
+5. the smallest set of likely implementation entry points in `src/`, `app/`, `modules/`, `components/`, or `router/`
+6. supporting files in `api/`, `stores/`, `types/`, or `mock/` only when they clarify behavior in scope
+7. `docs/`, README files, API docs, or design notes that resolve open questions
+8. similar examples in `openspec/changes/`, `openspec/changes/archive/`, and `openspec/specs/`
 
 If the repository already contains `opsx`, `openspec-*`, or similar commands or skills, use them as references for the forward workflow. This skill performs retroactive recovery and repair.
 
@@ -162,6 +264,26 @@ Execution requirements:
 - if config is long, extract only the constraints that matter to the current scope instead of copying everything
 - if no config is found, say so briefly in the summary and fall back to repository conventions
 
+### 0.5 Build a Candidate Map Before Deep Reads
+
+Before opening many implementation files, create a lightweight map of likely evidence:
+
+- matching spec files under `openspec/specs/`
+- matching changes under `openspec/changes/` and `openspec/changes/archive/`
+- likely feature folders
+- likely route files or page entry points
+- related API, store, and type files
+
+Keep this step cheap:
+
+- prefer file and directory names first
+- use keyword search to shortlist candidates
+- avoid opening large files until they are confirmed relevant
+
+If the candidate map points to multiple unrelated feature areas, split them or ask the user to narrow after showing the likely options.
+
+If the candidate map exceeds any hard-stop threshold, do not begin broad file reading. Switch to a scope-plan response immediately.
+
 ### 1. Define the Scope
 
 Answer these questions:
@@ -177,6 +299,23 @@ Decision rules:
 - if the files implement one user-facing goal, prefer one change
 - if the same directory mixes multiple independent goals, split them
 - only expand scope when a shared dependency directly changes user-visible behavior
+- if the initial scope still covers too much of the repository, shrink to the most likely user-facing entry points before deep reading
+- if the scope still exceeds hard-stop thresholds after shrinking, do not write final OpenSpec artifacts yet; return a split plan first
+
+### 1.5 Classify Sync vs. Edit Ambiguity
+
+Answer these questions:
+
+1. Is the user asking for code-backed OpenSpec sync, or only document wording updates?
+2. Does a capability name such as `layout` imply a scoped capability-spec update?
+3. Does the repository already contain a matching `openspec/specs/<capability>/spec.md` or nearby archived delta spec?
+
+Decision rules:
+
+- when the user mentions stale OpenSpec, drift, sync, or mismatch, default to code-backed repair analysis
+- when the request is "update `layout`" or similar, search the matching spec and related implementation before editing
+- if the desired outcome is "make spec match the code", do not short-circuit into generic document refresh
+- if the request is purely about wording or formatting and does not require implementation evidence, this skill is optional
 
 ### 2. Decide Between Archive and Repair
 
@@ -195,6 +334,7 @@ Check the target scope for:
 - a completely missing change
 - missing proposal / design / tasks / delta spec artifacts
 - a main spec that is still outdated
+- a capability spec such as `layout` that only partially reflects the implementation
 - an archived change that exists but was never synced into the main spec
 - behavioral changes in code that never made it into spec
 
@@ -203,6 +343,8 @@ Classify the gap as:
 1. **Missing**: code exists, OpenSpec does not
 2. **Drift**: code and spec disagree
 3. **Archive-ready**: the feature is stable enough for an archived change
+
+At this stage, do not try to prove every detail. First confirm that the candidate scope really contains the behavior the user cares about.
 
 ### 4. Infer Capability Intent from Code
 
@@ -217,6 +359,8 @@ Translate implementation details into stable capability language:
 
 - weak: "Added `ChartPanel.tsx`"
 - better: "The system supports viewing key metric charts in the analytics dashboard and switching time ranges"
+
+Use representative files, not exhaustive file reads. Once the user-visible capability is clear, only inspect additional files that change the spec outcome.
 
 ### 5. Write `proposal.md`
 
@@ -322,14 +466,15 @@ Rules:
 
 If the main spec already exists, describe the incremental change instead of copying the whole main spec.
 
-### 9. Repair Main Specs When Needed
+### 9. Repair Main or Capability Specs When Needed
 
-If the user explicitly wants main specs updated alongside the backfill:
+If the user explicitly wants main specs or capability specs updated alongside the backfill:
 
 - read `openspec/specs/<capability>/spec.md`
 - sync the stable implementation into it
 - preserve existing requirements instead of bluntly overwriting them
 - if the main spec still says `TBD - created by archiving change ...` and evidence is sufficient, replace that placeholder with a clear capability purpose
+- if the user asked for "update `layout`" or another scoped capability, treat that as a targeted capability-spec sync request unless the user clearly asked for wording-only edits
 
 If code and spec conflict and the correct intent is still unclear:
 
@@ -346,11 +491,14 @@ Before finishing, check:
 - whether the user-specified scope was accidentally expanded
 - whether repair mode clearly separates implemented work from remaining documentation fixes
 - whether any guess was incorrectly written as fact
+- whether you exceeded the smallest reasonable scope to answer the request
+- whether any unopened but deferred paths should be listed as follow-up instead of being silently ignored
 
 If evidence is insufficient, do not paper over it. Instead:
 
 - leave unresolved items in `Open Questions`
 - include a `Gaps to confirm` section in the summary
+- mention any deferred paths or scope intentionally not inspected because of repository size
 
 ## Summary Formats
 
@@ -417,3 +565,11 @@ If evidence is insufficient, do not paper over it. Instead:
 **Example 5: Optimize Output from Config First**
 
 "Read `openspec/config.yaml` first. Follow its output language, project terminology, and constraint parameters. Then repair the existing implementation in `src/features/incident-center` into an OpenSpec repair change. Only work inside that directory, and if my request conflicts with config, list the mismatch explicitly."
+
+**Example 6: Stale Capability Sync**
+
+"OpenSpec has not been updated in a while. Please use the current layout-related code plus `openspec/specs/layout/spec.md` to sync the `layout` capability, explain what drifted, and create any missing repair artifacts instead of treating this as a copy edit."
+
+**Example 7: Indirect Scoped Request**
+
+"Help me update `@layout`. Only inspect the layout implementation and its existing OpenSpec files, decide whether this is a repair backfill or a stable spec sync, and keep unrelated modules out of scope."
