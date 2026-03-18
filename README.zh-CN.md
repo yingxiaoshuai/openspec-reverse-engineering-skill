@@ -112,4 +112,4 @@ git push -u origin main
 
 ## License
 
-本仓库采用 Apache License 2.0，详见 `LICENSE` 文件。
+本仓库采用 MIT License，详见 `LICENSE` 文件。

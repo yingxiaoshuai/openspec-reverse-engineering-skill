@@ -110,4 +110,4 @@ git push -u origin main
 
 ## License
 
-This repository is licensed under the Apache License 2.0. See `LICENSE`.
+This repository is licensed under the MIT License. See `LICENSE`.
