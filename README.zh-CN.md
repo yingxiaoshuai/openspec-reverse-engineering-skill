@@ -63,18 +63,12 @@ openspec-retro-archive/
    └─ github-metadata.md
 ```
 
-## 本地安装
+## 安装
 
-如果你想本地直接试用，可以把这个项目放到支持 skills 的目录下，例如：
-
-```powershell
-Copy-Item -Recurse .\openspec-retro-archive $HOME\.claude\skills\openspec-retro-archive
-```
-
-然后读取：
+可以直接通过 GitHub 安装这个 skill：
 
 ```powershell
-npx openskills read openspec-retro-archive
+npx skills add https://github.com/yingxiaoshuai/openspec-reverse-engineering-skill --skill openspec-retro-archive
 ```
 
 ## 示例提示词

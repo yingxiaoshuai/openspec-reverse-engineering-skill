@@ -63,16 +63,10 @@ openspec-retro-archive/
 
 ## Installation
 
-If you want to try the skill locally:
+Install the skill from GitHub with:
 
 ```powershell
-Copy-Item -Recurse .\openspec-retro-archive $HOME\.claude\skills\openspec-retro-archive
-```
-
-Then load it with:
-
-```powershell
-npx openskills read openspec-retro-archive
+npx skills add https://github.com/yingxiaoshuai/openspec-reverse-engineering-skill --skill openspec-retro-archive
 ```
 
 ## Example Prompts
