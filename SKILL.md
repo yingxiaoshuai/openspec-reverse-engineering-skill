@@ -1,8 +1,38 @@
 ---
 name: openspec-retro-archive
-description: Reverse engineer shipped, legacy, or already-written code into OpenSpec archive changes and capability specs, and repair or backfill missing or stale OpenSpec when code moved ahead of docs. Always read repo OpenSpec config such as `openspec/config.yaml` or `.openspec.yaml` and follow its output language, project context, and constraint parameters. Use this skill when users ask to reconstruct proposal/design/tasks/spec artifacts from existing implementations, archive historical features into OpenSpec, repair skipped OpenSpec changes, sync an outdated OpenSpec capability or main spec with current code, investigate spec drift, or update a specific feature/folder/file/capability such as `layout` from real implementation. Trigger even for indirect phrasing like "OpenSpec hasn't been updated in a while", "help me update @layout", "sync the spec with code", "根据代码更新 OpenSpec", "补 layout 的 OpenSpec", "同步 capability spec", or "spec 和代码对不上".
-category: OpenSpec
-tags: [openspec, archive, reverse-engineering, legacy, documentation, code-to-spec, remediation, repair, sync, drift, capability-spec]
+description: >-
+  Reverse engineer shipped, legacy, or already-written code into OpenSpec
+  archive changes and capability specs, and repair or backfill missing or
+  stale OpenSpec when code moved ahead of docs. Reads repo OpenSpec config
+  such as openspec/config.yaml or .openspec.yaml and follows its output
+  language, project context, and constraint parameters. Use this skill when
+  users ask to reconstruct proposal/design/tasks/spec artifacts from existing
+  implementations, archive historical features into OpenSpec, repair skipped
+  OpenSpec changes, sync an outdated capability or main spec with current
+  code, investigate spec drift, or update a specific feature/folder/file.
+  Triggers on phrasing like "reverse engineer OpenSpec from code", "repair
+  missing OpenSpec", "sync the spec with code", "把旧代码补成 OpenSpec",
+  "修复缺失的 OpenSpec", or "spec 和代码对不上".
+license: Apache-2.0
+compatibility: >-
+  Works with Claude Code, Cursor, OpenAI Codex, and any agent that supports
+  SKILL.md. No external runtime dependencies.
+metadata:
+  author: yingxiaoshuai
+  version: "1.0.0"
+  category: OpenSpec
+  tags:
+    - openspec
+    - archive
+    - reverse-engineering
+    - legacy
+    - documentation
+    - code-to-spec
+    - remediation
+    - repair
+    - sync
+    - drift
+    - capability-spec
 ---
 
 # OpenSpec Retro Archive and Repair

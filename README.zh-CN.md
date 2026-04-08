@@ -49,6 +49,7 @@
 ```text
 openspec-retro-archive/
 ├─ SKILL.md
+├─ LICENSE
 ├─ README.md
 ├─ README.zh-CN.md
 ├─ .gitignore
@@ -65,11 +66,27 @@ openspec-retro-archive/
 
 ## 安装
 
-可以直接通过 GitHub 安装这个 skill：
+通过 Agent Skills CLI 安装：
 
-```powershell
-npx skills add https://github.com/yingxiaoshuai/openspec-reverse-engineering-skill --skill openspec-retro-archive
+```bash
+npx @agentskill.sh/cli@latest setup
+npx skills add yingxiaoshuai/openspec-reverse-engineering-skill
 ```
+
+也可以手动复制到对应 agent 的 skills 目录：
+
+```bash
+# Claude Code
+cp -r openspec-retro-archive ~/.claude/skills/openspec-retro-archive
+
+# Cursor
+cp -r openspec-retro-archive ~/.cursor/skills/openspec-retro-archive
+
+# OpenAI Codex
+cp -r openspec-retro-archive ~/.agents/skills/openspec-retro-archive
+```
+
+你也可以在 [Agent Skills Directory](https://skills.sh) 上浏览和安装此 skill。
 
 ## 示例提示词
 
@@ -93,17 +110,6 @@ npx skills add https://github.com/yingxiaoshuai/openspec-reverse-engineering-ski
 - 按文件夹逆向
 - 按配置继承输出语言与限制参数
 
-## 上传 GitHub
-
-示例命令：
-
-```powershell
-git add .
-git commit -m "feat: add OpenSpec retro archive and repair skill"
-git remote add origin <your-github-repo-url>
-git push -u origin main
-```
-
 ## License
 
-本仓库采用 MIT License，详见 `LICENSE` 文件。
+本仓库采用 Apache License 2.0，详见 [LICENSE](./LICENSE)。

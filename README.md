@@ -47,6 +47,7 @@ Before generating output, it can also read OpenSpec configuration such as `opens
 ```text
 openspec-retro-archive/
 ├─ SKILL.md
+├─ LICENSE
 ├─ README.md
 ├─ README.zh-CN.md
 ├─ .gitignore
@@ -63,11 +64,27 @@ openspec-retro-archive/
 
 ## Installation
 
-Install the skill from GitHub with:
+Install with the Agent Skills CLI:
 
-```powershell
-npx skills add https://github.com/yingxiaoshuai/openspec-reverse-engineering-skill --skill openspec-retro-archive
+```bash
+npx @agentskill.sh/cli@latest setup
+npx skills add yingxiaoshuai/openspec-reverse-engineering-skill
 ```
+
+Or install manually by copying into your agent's skills directory:
+
+```bash
+# Claude Code
+cp -r openspec-retro-archive ~/.claude/skills/openspec-retro-archive
+
+# Cursor
+cp -r openspec-retro-archive ~/.cursor/skills/openspec-retro-archive
+
+# OpenAI Codex
+cp -r openspec-retro-archive ~/.agents/skills/openspec-retro-archive
+```
+
+Browse this skill on the [Agent Skills Directory](https://skills.sh).
 
 ## Example Prompts
 
@@ -91,17 +108,6 @@ Evaluation prompts live in [evals.json](./evals/evals.json). They now cover:
 - folder-scoped reverse engineering
 - config-aware language and constraint handling
 
-## Publishing to GitHub
-
-Example commands:
-
-```powershell
-git add .
-git commit -m "feat: add OpenSpec retro archive and repair skill"
-git remote add origin <your-github-repo-url>
-git push -u origin main
-```
-
 ## License
 
-This repository is licensed under the MIT License. See `LICENSE`.
+Apache-2.0. See [LICENSE](./LICENSE).
